@@ -1,36 +1,225 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 💻 Frontend - Sistema Financeiro (InvestApp)
 
-## Getting Started
+## 📌 Sobre o Frontend
 
-First, run the development server:
+Este módulo representa a interface web do sistema financeiro (**InvestApp**), desenvolvida com **Next.js (App Router)** e **React**.
+
+Atualmente, o frontend está em desenvolvimento, com foco inicial na funcionalidade de **visualização e cadastro de ativos**.
+
+---
+
+## 🚧 Status do Projeto
+
+| Funcionalidade        | Status        |
+|----------------------|-------------|
+| 📊 Listagem de Ativos | ✅ Concluído |
+| ➕ Cadastro de Ativos | ✅ Concluído |
+| 🔍 Busca de Ativos    | ✅ Concluído |
+| 👤 Investidores       | 🚧 Em desenvolvimento |
+| 💸 Operações          | 🚧 Em desenvolvimento |
+
+---
+
+## 🏗️ Tecnologias Utilizadas
+
+- **Next.js 14+ (App Router)**
+- **React**
+- **Tailwind CSS**
+- **Fetch API**
+- **Java Spring Boot (Backend)**
+
+---
+
+## 🧠 Arquitetura do Frontend
+
+O frontend segue uma estrutura baseada em componentes reutilizáveis:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+app/
+ ├── ativos/
+ │    └── page.js
+ │
+ ├── investidores/
+ |    └── page.js
+ |
+ ├── operacoes/
+ |    └── page.js
+ |
+components/
+ ├── NovoAtivo.jsx
+ ├── Sidebar.jsx
+ └── TopBar.jsx
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 📊 Página de Ativos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+A página /ativos é responsável por:
 
-## Learn More
+- Buscar ativos da API (GET /ativo)
+- Filtrar ativos por ticker
+- Agrupar ativos por tipo
+- Exibir dados em cards
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔍 Funcionalidade de Busca
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+A busca é controlada via query params:
 
-## Deploy on Vercel
+```
+/ativos?busca=PETR
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Funcionamento:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- O termo é capturado via searchParams
+- A lista é filtrada em tempo real
+
+```
+const ativosFiltrados = ativos.filter(ativo =>
+    ativo.ticker.toUpperCase().includes(query.toUpperCase())
+)
+```
+
+---
+
+## 📦 Agrupamento por Tipo
+
+Os ativos são organizados dinamicamente:
+
+const ativosAgrupados = ativosFiltrados.reduce((acc, ativo) => {
+    const tipoAtivo = ativo.tipo || "Outros";
+
+    if (!acc[tipoAtivo]) acc[tipoAtivo] = [];
+    acc[tipoAtivo].push(ativo);
+
+    return acc;
+}, {})
+🧾 Exibição dos Cards
+
+Cada ativo exibe:
+
+Ticker
+Nome
+Risco
+Valor Atual
+Imposto Estimado
+Exemplo visual:
+PETR4
+Petrobras
+Risco: 5
+
+Valor Atual: R$ 30.50
+Imposto: R$ 4.50
+➕ Cadastro de Ativos
+
+O componente NovoAtivo permite criar novos ativos dinamicamente.
+
+🔄 Fluxo:
+Busca tipos disponíveis (GET /ativo/tipos)
+Usuário seleciona tipo
+Formulário adapta campos dinamicamente
+Envia requisição POST /ativo
+🧠 Lógica dinâmica por tipo
+
+O formulário muda conforme o tipo:
+
+📊 AÇÃO
+ticker
+nome
+valorAtual
+setor
+🏢 FUNDO IMOBILIÁRIO
+ticker
+nome
+valorAtual
+segmento
+💰 RENDA FIXA
+ticker
+nome
+valorAtual
+taxaContratada
+indexador
+dataVencimento
+🚀 Envio para API
+await fetch("http://localhost:8081/ativo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+});
+🔄 Atualização da Tela
+
+Após salvar:
+
+router.refresh();
+
+👉 Recarrega os dados automaticamente sem reload da página
+
+🧭 Navegação
+Sidebar
+
+Permite navegação entre módulos:
+
+Ativos
+Investidores (em breve)
+Operações (em breve)
+const navLinks = [
+    { nome: "Ativos", href: "/ativos" },
+    { nome: "Investidores", href: "/investidores" },
+    { nome: "Operações", href: "/operacoes" }
+];
+🔝 TopBar (Busca Global)
+
+Responsável por:
+
+Campo de busca
+Atualização de URL com query params
+params.set('busca', termo);
+🌐 Integração com Backend
+
+O frontend consome a API Spring Boot:
+
+GET /ativo
+GET /ativo/tipos
+POST /ativo
+⚠️ Tratamento de Erros
+Falha na API → mensagem de erro
+Lista vazia → aviso ao usuário
+Busca sem resultado → feedback visual
+🎨 UI/UX
+Layout moderno com Tailwind
+Cards responsivos
+Modal para criação de ativos
+Feedback visual para ações
+🚀 Como Executar
+Instalar dependências:
+npm install
+Rodar projeto:
+npm run dev
+Acessar:
+http://localhost:3000/ativos
+🔮 Próximos Passos
+Implementar tela de Investidores
+Implementar tela de Operações
+Melhorar validação de formulários
+Adicionar loading states
+Integração com autenticação
+
+---
+
+## 👩‍💻 Autores
+
+<table align="center">
+  <tr>
+    <td align="center" width="160" height="200" style="border:2px solid #ccc;">
+      <img src="https://github.com/Liiiiisssz.png" width="115" height="115"><br>
+      <sub><a href="https://github.com/Liiiiisssz">Elis Jasper</a></sub>
+    </td>
+    <td align="center" width="160" height="200" style="border:2px solid #ccc;">
+      <img src="https://github.com/KaelLuih.png" width="115" height="115"><br>
+      <sub><a href="https://github.com/KaelLuih">Kael Luih de Araujo</a></sub>
+    </td>
+  </tr>
+</table>
