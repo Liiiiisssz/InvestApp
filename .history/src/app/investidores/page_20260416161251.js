@@ -53,7 +53,7 @@ export default async function PaginaInvestidor({searchParams}){
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 p-8 rounded-xl">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-2xl font-bold text-green-800">Painel de Investidores</h1>
+                <h1 className="text-2xl font-bold text-blue-800">Painel de Investidores</h1>
                 {/* Lembre-se de criar este componente depois */}
                 <NovoInvestidor />
             </div>
@@ -94,7 +94,7 @@ export default async function PaginaInvestidor({searchParams}){
                                 <div className="grid grid-cols-1 gap-4 text-center border-t border-gray-200 pt-4 mt-4">
                                     <div>
                                         <p className="text-xs text-gray-500 mb-1 font-medium">Saldo em Conta</p>
-                                        <p className="font-bold text-green-600 text-xl">
+                                        <p className="font-bold text-blue-600 text-xl">
                                             {}
                                             {investidor.saldo?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                         </p>
