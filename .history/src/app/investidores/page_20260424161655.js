@@ -2,8 +2,8 @@ import NovoInvestidor from "@/components/NovoInvestidor";
 
 export default async function PaginaInvestidor({ searchParams }) {
     const params = await searchParams;
-    
-    const query = params?.busca || "";
+    const buscaNome = params?.busca || "";
+    const saldoMinimo = params?.saldo || "";
     const idInvestidor = params?.id || "";
 
     let url = "http://localhost:8081/investidor";
@@ -12,14 +12,10 @@ export default async function PaginaInvestidor({ searchParams }) {
     if (idInvestidor) {
         url = `http://localhost:8081/investidor/${idInvestidor}`;
         isBuscaUnica = true; 
-    } else if (query) {
-        const isNumero = /^\d+(\.\d+)?$/.test(query.replace(',', '.'));
-
-        if (isNumero) {
-            url = `http://localhost:8081/investidor/saldo-minimo?saldo=${query.replace(',', '.')}`;
-        } else {
-            url = `http://localhost:8081/investidor/busca-nome?nome=${encodeURIComponent(query)}`;
-        }
+    } else if (buscaNome) {
+        url = `http://localhost:8081/investidor/busca-nome?nome=${encodeURIComponent(buscaNome)}`;
+    } else if (saldoMinimo) {
+        url = `http://localhost:8081/investidor/saldo-minimo?saldo=${saldoMinimo}`;
     }
 
     const resposta = await fetch(url, { cache: "no-store" });
@@ -39,13 +35,12 @@ export default async function PaginaInvestidor({ searchParams }) {
                     <h1 className="text-2xl font-bold text-green-800">Painel de Investidor</h1>
                     <NovoInvestidor />
                 </div>
-                <div className="text-gray-500">
-                    {query ? `Nenhum investidor encontrado para "${query}".` : "Nenhum investidor encontrado."}
-                </div>
+                <div className="text-gray-500">Nenhum investidor encontrado.</div>
             </div>
         )
     }
 
+  
     const investidoresAgrupados = investidores.reduce((acc, inv) => {
         const tipo = inv.tipo || "Outros";
         if (!acc[tipo]) acc[tipo] = [];

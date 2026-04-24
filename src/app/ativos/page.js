@@ -13,21 +13,34 @@ export default async function PaginaAtivo({ searchParams }) {
 
     const ativos = await resposta.json();
 
+    // 1. CORREÇÃO AQUI: Adicionado o cabeçalho e o botão se a lista estiver vazia
     if (!ativos || ativos.length === 0) {
-        return <div className="p-8 text-gray-500">Nenhum ativo cadastrado.</div>
+        return (
+            <div className="min-h-screen bg-gray-50 text-gray-900 p-8 rounded-xl">
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-2xl font-bold text-green-800">Painel de Ativos</h1>
+                    <NovoAtivo />
+                </div>
+                <div className="text-gray-500">Nenhum ativo cadastrado.</div>
+            </div>
+        );
     }
 
     const ativosFiltrados = ativos.filter(ativo =>
         ativo.ticker.toUpperCase().includes(query.toUpperCase())    
-    )
+    );
 
-    if(ativosFiltrados.length === 0){
+    // 2. CORREÇÃO AQUI: Adicionado o cabeçalho e o botão se o filtro não encontrar nada
+    if (ativosFiltrados.length === 0) {
         return(
-            <div className="p-8 min-h-screen bg-gray-50 text-gray-900">
-                <h1 className="text-2xl font-bold mb-4 text-green-800">Painel de Ativos</h1>
+            <div className="min-h-screen bg-gray-50 text-gray-900 p-8 rounded-xl">
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-2xl font-bold text-green-800">Painel de Ativos</h1>
+                    <NovoAtivo />
+                </div>
                 <p className="text-gray-500">Nenhum ativo encontrado para "{query}"</p>
             </div>
-        )
+        );
     }
 
     const ativosAgrupados = ativosFiltrados.reduce((acc, ativo) => {
@@ -36,7 +49,7 @@ export default async function PaginaAtivo({ searchParams }) {
         if (!acc[tipoAtivo]) acc[tipoAtivo] = [];
         acc[tipoAtivo].push(ativo);
         return acc;
-    }, {})
+    }, {});
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 p-8 rounded-xl">

@@ -1,1 +1,0 @@
-import NovoInvestidor from "@/components/NovoInvestidor";

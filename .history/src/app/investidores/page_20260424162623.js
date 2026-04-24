@@ -3,6 +3,7 @@ import NovoInvestidor from "@/components/NovoInvestidor";
 export default async function PaginaInvestidor({ searchParams }) {
     const params = await searchParams;
     
+    // Pega o valor digitado na barra de pesquisa
     const query = params?.busca || "";
     const idInvestidor = params?.id || "";
 
@@ -13,9 +14,11 @@ export default async function PaginaInvestidor({ searchParams }) {
         url = `http://localhost:8081/investidor/${idInvestidor}`;
         isBuscaUnica = true; 
     } else if (query) {
+        // MÁGICA AQUI: Verifica se o que foi digitado é apenas número
         const isNumero = /^\d+(\.\d+)?$/.test(query.replace(',', '.'));
 
         if (isNumero) {
+            // Se for número, chama a API de saldo
             url = `http://localhost:8081/investidor/saldo-minimo?saldo=${query.replace(',', '.')}`;
         } else {
             url = `http://localhost:8081/investidor/busca-nome?nome=${encodeURIComponent(query)}`;

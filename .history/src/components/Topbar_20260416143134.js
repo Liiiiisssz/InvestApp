@@ -22,7 +22,7 @@ export default function TopBar(){
             <div className="w-full max-w-md">
                 <input 
                     type="text"
-                    placeholder="Buscar..."
+                    placeholder="Buscar ativo..."
                     className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block px-4 py-2"
                     onChange={(e) => handleSearch(e.target.value)}
                     defaultValue={searchParams.get('busca')?.toString()}

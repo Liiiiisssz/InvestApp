@@ -3,6 +3,7 @@ import NovoInvestidor from "@/components/NovoInvestidor";
 export default async function PaginaInvestidor({ searchParams }) {
     const params = await searchParams;
     
+    // Pega o valor digitado na barra de pesquisa
     const query = params?.busca || "";
     const idInvestidor = params?.id || "";
 
