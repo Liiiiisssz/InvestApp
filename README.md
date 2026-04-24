@@ -62,9 +62,9 @@ A página /ativos é responsável por:
 - Agrupar ativos por tipo
 - Exibir dados em cards
 
----
+##
 
-## 🔍 Funcionalidade de Busca
+### 🔍 Funcionalidade de Busca
 
 A busca é controlada via query params:
 
@@ -83,12 +83,13 @@ const ativosFiltrados = ativos.filter(ativo =>
 )
 ```
 
----
+##
 
-## 📦 Agrupamento por Tipo
+### 📦 Agrupamento por Tipo
 
 Os ativos são organizados dinamicamente:
 
+```
 const ativosAgrupados = ativosFiltrados.reduce((acc, ativo) => {
     const tipoAtivo = ativo.tipo || "Outros";
 
@@ -97,115 +98,86 @@ const ativosAgrupados = ativosFiltrados.reduce((acc, ativo) => {
 
     return acc;
 }, {})
-🧾 Exibição dos Cards
+```
+
+##
+
+### 🧾 Exibição dos Cards
 
 Cada ativo exibe:
 
-Ticker
-Nome
-Risco
-Valor Atual
-Imposto Estimado
-Exemplo visual:
-PETR4
-Petrobras
-Risco: 5
+- Ticker
+- Nome
+- Risco
+- Valor Atual
+- Imposto Estimado
 
-Valor Atual: R$ 30.50
-Imposto: R$ 4.50
-➕ Cadastro de Ativos
+O componente **NovoAtivo** permite criar novos ativos dinamicamente.
 
-O componente NovoAtivo permite criar novos ativos dinamicamente.
+---
 
-🔄 Fluxo:
-Busca tipos disponíveis (GET /ativo/tipos)
-Usuário seleciona tipo
-Formulário adapta campos dinamicamente
-Envia requisição POST /ativo
-🧠 Lógica dinâmica por tipo
+## 🔄 Fluxo:
+
+- Busca tipos disponíveis (GET /ativo/tipos)
+- Usuário seleciona tipo
+- Formulário adapta campos dinamicamente
+- Envia requisição POST /ativo
+
+##
+
+### 🧠 Lógica dinâmica por tipo
 
 O formulário muda conforme o tipo:
 
-📊 AÇÃO
-ticker
-nome
-valorAtual
-setor
-🏢 FUNDO IMOBILIÁRIO
-ticker
-nome
-valorAtual
-segmento
-💰 RENDA FIXA
-ticker
-nome
-valorAtual
-taxaContratada
-indexador
-dataVencimento
-🚀 Envio para API
+| 📊 AÇÃO | 🏢 FUNDO IMOBILIÁRIO | 💰 RENDA FIXA |
+|---------|-----------------------|----------------|
+| - ticker | - ticker | - ticker
+| - nome | - nome | - nome
+| - valorAtual | - valorAtual | - valorAtual
+| - setor | - segmento | - taxaContratada
+| | | - indexador
+| | | - dataVencimento
+
+##
+
+### 🚗 Envio para API
+
+```
 await fetch("http://localhost:8081/ativo", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
 });
-🔄 Atualização da Tela
+```
 
-Após salvar:
+---
 
-router.refresh();
+## 🚀 Como Executar
 
-👉 Recarrega os dados automaticamente sem reload da página
+- Instalar dependências:
 
-🧭 Navegação
-Sidebar
-
-Permite navegação entre módulos:
-
-Ativos
-Investidores (em breve)
-Operações (em breve)
-const navLinks = [
-    { nome: "Ativos", href: "/ativos" },
-    { nome: "Investidores", href: "/investidores" },
-    { nome: "Operações", href: "/operacoes" }
-];
-🔝 TopBar (Busca Global)
-
-Responsável por:
-
-Campo de busca
-Atualização de URL com query params
-params.set('busca', termo);
-🌐 Integração com Backend
-
-O frontend consome a API Spring Boot:
-
-GET /ativo
-GET /ativo/tipos
-POST /ativo
-⚠️ Tratamento de Erros
-Falha na API → mensagem de erro
-Lista vazia → aviso ao usuário
-Busca sem resultado → feedback visual
-🎨 UI/UX
-Layout moderno com Tailwind
-Cards responsivos
-Modal para criação de ativos
-Feedback visual para ações
-🚀 Como Executar
-Instalar dependências:
+```
 npm install
-Rodar projeto:
+```
+
+- Rodar projeto:
+
+```
 npm run dev
-Acessar:
+```
+
+- Acessar:
+
+```
 http://localhost:3000/ativos
-🔮 Próximos Passos
-Implementar tela de Investidores
-Implementar tela de Operações
-Melhorar validação de formulários
-Adicionar loading states
-Integração com autenticação
+```
+
+---
+
+## 🔮 Próximos Passos
+
+- Implementar tela de Investidores
+- Implementar tela de Operações
 
 ---
 
